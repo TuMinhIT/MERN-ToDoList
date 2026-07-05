@@ -1,0 +1,39 @@
+import mongoose from "mongoose";
+
+const taskSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: [true, "Title is required"],
+      trim: true,
+      maxlength: 100,
+    },
+
+    description: {
+      type: String,
+      trim: true,
+    },
+
+    completed: {
+      type: Boolean,
+      default: false,
+    },
+
+    category: {
+      type: String,
+      trim: true,
+      default: "General",
+    },
+
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export default mongoose.model("Task", taskSchema);
