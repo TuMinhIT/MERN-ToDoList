@@ -2,7 +2,6 @@ import ApiError from "../utils/apiError.js";
 import Task from "../models/task.model.js";
 const taskService = {
   createTask: async (userId, data) => {
-    console.log(userId);
     const task = await Task.create({
       title: data.title,
       description: data.description,
@@ -14,20 +13,16 @@ const taskService = {
 
   getTasks: async (userId, page = 1, limit = 10, completed) => {
     const skip = (page - 1) * limit;
-
     const filter = {
       user: userId,
     };
-
     if (completed === "true" || completed === "false") {
       filter.completed = completed === "true";
     }
-
     const [tasks, total] = await Promise.all([
       Task.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
       Task.countDocuments(filter),
     ]);
-
     return {
       tasks,
       pagination: {
@@ -41,13 +36,11 @@ const taskService = {
 
   getStatistic: async (userId) => {
     const filter = { user: userId };
-
     const [total, completed, pending] = await Promise.all([
       Task.countDocuments(filter),
       Task.countDocuments({ ...filter, completed: true }),
       Task.countDocuments({ ...filter, completed: false }),
     ]);
-
     return {
       total,
       completed,

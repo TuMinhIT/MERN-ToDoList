@@ -24,7 +24,7 @@ const userService = {
   login: async (email, password) => {
     const user = await User.findOne({ email });
     if (!user) throw new ApiError(400, "User not found");
-    const isMatch = bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new ApiError(400, "incorect password");
     }
