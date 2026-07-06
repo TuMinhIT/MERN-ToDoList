@@ -10,14 +10,23 @@ const taskController = {
         message: "Task created successfully",
       }),
     );
-
   },
 
   getAll: async (req, res, next) => {
-    const response = await taskService.getTasks(req.user.userId);
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const completed = req.query.completed;
+    const result = await taskService.getTasks(
+      req.user.userId,
+      page,
+      limit,
+      completed,
+    );
+    console.log("retrieve");
+
     return res.json(
       new ApiResponse({
-        data: response,
+        data: result,
         message: "Tasks retrieved successfully",
       }),
     );
@@ -33,11 +42,21 @@ const taskController = {
     );
   },
 
+  getStatistic: async (req, res, next) => {
+    const response = await taskService.getStatistic(req.user.userId);
+    return res.json(
+      new ApiResponse({
+        data: response,
+        message: "Statistic retrieved successfully",
+      }),
+    );
+  },
+
   update: async (req, res, next) => {
     const response = await taskService.updateTask(
       req.params.id,
       req.body,
-      req.user.userId
+      req.user.userId,
     );
     return res.json(
       new ApiResponse({
@@ -45,18 +64,19 @@ const taskController = {
         message: "Task updated successfully",
       }),
     );
-
   },
 
   delete: async (req, res, next) => {
-    const response = await taskService.deleteTask(req.params.id, req.user.userId);
+    const response = await taskService.deleteTask(
+      req.params.id,
+      req.user.userId,
+    );
     return res.json(
       new ApiResponse({
         data: response,
         message: "Task deleted successfully",
       }),
     );
-
   },
 };
 
